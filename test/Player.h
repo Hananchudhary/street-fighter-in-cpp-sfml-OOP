@@ -1,0 +1,83 @@
+#pragma once
+#include"Fighter.h"
+#include"collission.h"
+class Player {
+	Fighter* f;
+public:
+	Player() :f { nullptr } {}
+	Player(Fighter* _f):f{_f}{}
+	void set_left_move(bool flag) {
+		f->set_left_move(flag);
+	}
+	void set_right_move(bool flag) {
+		f->set_right_move(flag);
+	}
+	void set_jumping(bool flag) {
+		f->set_jumping(flag);
+	}
+	bool get_jump() const { return f->get_jump(); }
+	void set_goingup(bool flag) {
+		f->set_goingup(flag);
+	}
+	void set_place(float x, float y) {
+		f->set_place(x, y);
+	}
+	void set_sit(bool flag) {
+		f->set_sit(flag);
+	}
+	float get_x() const {
+		return f->get_x();
+	}
+	float get_y() const {
+		return f->get_y();
+	}
+	bool get_attack_status() const { return f->get_attack_status(); }
+	bool get_sitting()const { return f->get_sitting(); }
+	void set_attack(bool flag) {
+		f->set_attack(flag);
+	}
+	void move_character(bool& flag, sf::Clock& clk) {
+		f->move_character(flag, clk);
+	}
+	void set_box(sf::IntRect box) {
+		f->set_box(box);
+	}
+	void display(sf::RenderWindow& window) const {
+		f->display(window);
+	}
+	bool is_attacking()const {
+		return f->is_attacking();
+	}
+	int get_condition() const {
+		return f->get_attack_condition();
+	}
+	float get_health() const  {
+		return f->get_health();
+	}
+	void attack(Player* p2,bool& flag, sf::Clock& clk) {
+		collission<Player, Player> takkar;
+		collission<Player, int> condition;
+		if (!flag && takkar.check_collission(*this,*p2) && condition.check_attack_condition(*p2,this->get_condition())) {
+			p2->set_health(p2->get_health() - f->attack());
+			f->set_jumping(false);
+			flag = true;
+		}
+		if (clk.getElapsedTime().asSeconds() > 0.2f) {
+			flag = false;
+			clk.restart();
+			f->set_attack(false);
+		}
+	}
+	sf::IntRect get_box() {
+		return f->get_attack_box();
+	}
+	float get_GroundY() const { return f->get_GroundY(); }
+	bool get_leftMoving()const { return f->get_leftMoving(); }
+	bool get_rightMoving()const { return f->get_rightMoving(); }
+	void set_health(float val) {
+		f->set_health(val);
+	}
+	bool is_sitting()const {
+		return f->isSitting();
+	}
+};
