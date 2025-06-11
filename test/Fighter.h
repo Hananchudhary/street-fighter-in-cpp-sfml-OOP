@@ -45,7 +45,7 @@ public:
 	}
 	float get_health()const { return this->health; }
 	Attack select_attack() {
-		Dynamic_array<Attack> atks;
+		Dynamic_array<Attack> atks(this->powers);
 		int size = this->powers.size();
 		for (int i = 0; i < size; i++) {
 			for (int j = i + 1; j < size; j++) {

@@ -10,11 +10,31 @@ public:
 	Attack select_attack() {
 		return this->f->select_attack();
 	}
-	void attack(Player* p2, bool& flag, sf::Clock& clk) {
-		float distance = this->get_x() - p2->get_x();
-		if (distance < 0) {
-			distance = distance * (-1);
+	void select_movement() {
+		srand(time(0));
+		int random = rand() % 2;
+		if (random == 0) {
+			random = rand() % 2;
+			if (random == 0) {
+				random = rand() % 2;
+				if (random == 0) {
+					this->set_sit(false);
+					this->set_jumping(true);
+				}
+				else if(!this->get_jump()){
+					this->set_sit(true);
+				}
+			}
+			random = rand() % 2;
+			if (random == 0) {
+				this->set_left_move(true);
+			}
+			else {
+				this->set_right_move(true);
+			}
 		}
+	}
+	void attack(Player* p2, bool& flag, sf::Clock& clk) {
 		collission<Player, Player> takkar;
 		if (takkar.check_collission(*this, *p2) && p2->get_attack_status()) {
 			this->set_right_move(true);
@@ -27,7 +47,9 @@ public:
 				this->set_sit(false);
 				this->set_right_move(false);
 				this->set_left_move(false);
+				float dmg = atk.get_damage();
 				p2->set_health(p2->get_health() - atk.get_damage());
+				
 			}
 			if (clk.getElapsedTime().asSeconds() > 0.2f) {
 				clk.restart();
@@ -36,10 +58,7 @@ public:
 			}
 		}
 		else  {
-			if (isIdle()) {
-				srand(time(0));
-				int random = rand() % 4;
-			}
+			this->select_movement();
 		}
 	}
 };

@@ -37,7 +37,6 @@ public:
 		this->start = sf::IntRect({ 0,0 }, { 25,50 });
 		this->sit = sf::IntRect({ 180,0 }, { 25,50 });
 		this->sit_move = sf::IntRect({ 206,0 }, { 25,50 });
-		
 	}
 	int attack_idx() override{
 		if (sf::Keyboard::isKeyPressed(this->down) && sf::Keyboard::isKeyPressed(this->punch2)) {
