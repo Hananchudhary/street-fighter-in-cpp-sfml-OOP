@@ -44,6 +44,26 @@ public:
 		health_bar.setOutlineThickness(2.f);
 	}
 	float get_health()const { return this->health; }
+	Attack select_attack() {
+		Dynamic_array<Attack> atks;
+		int size = this->powers.size();
+		for (int i = 0; i < size; i++) {
+			for (int j = i + 1; j < size; j++) {
+				if (atks[j].get_damage() > atks[i].get_damage()) {
+					Attack temp = atks[i];
+					atks[i] = atks[j];
+					atks[j] = temp;
+				}
+			}
+		}
+		collission<Fighter, int> shart;
+		for (int i = 0; i < size; i++) {
+			if (shart.check_attack_condition(this, atks[i].get_condition())) {
+				return atks[i];
+			}
+		}
+		return Attack();
+	}
 	void set_attack(bool flag) {
 		this->is_attack = flag;
 	}
@@ -149,5 +169,8 @@ public:
 		return false;
 	}
 	virtual float attack() = 0;
+	sf::IntRect get_defaultbox()const {
+		return this->start;
+	}
 	virtual ~Fighter() = default;
 };

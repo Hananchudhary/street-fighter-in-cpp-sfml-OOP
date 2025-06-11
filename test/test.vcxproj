@@ -143,6 +143,7 @@
     <ClInclude Include="character.h" />
     <ClInclude Include="chun-li.h" />
     <ClInclude Include="collission.h" />
+    <ClInclude Include="computer.h" />
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="mystr.h" />

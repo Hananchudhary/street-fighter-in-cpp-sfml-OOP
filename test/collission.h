@@ -15,16 +15,16 @@ public:
         }
         return false;
 	}
-    bool check_attack_condition(T1 player1, T2 condition) {
+    bool check_attack_condition(T1* player1, T2 condition) {
         try {
             if (condition == 1) {
-                if (player1.get_y() < player1.get_GroundY() - 50.f) {
+                if (player1->get_y() < player1->get_GroundY() - 50.f) {
                     return false;
                 }
                 return true;
             }
             else if (condition == 2) {
-                if (player1.is_sitting()) {
+                if (player1->isSitting()) {
                     return false;
                 }
                 return true;

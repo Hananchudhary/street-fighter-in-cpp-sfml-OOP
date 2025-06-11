@@ -2,6 +2,7 @@
 #include"Fighter.h"
 #include"collission.h"
 class Player {
+protected:
 	Fighter* f;
 public:
 	Player() :f { nullptr } {}
@@ -54,10 +55,10 @@ public:
 	float get_health() const  {
 		return f->get_health();
 	}
-	void attack(Player* p2,bool& flag, sf::Clock& clk) {
+	virtual void attack(Player* p2,bool& flag, sf::Clock& clk) {
 		collission<Player, Player> takkar;
 		collission<Player, int> condition;
-		if (!flag && takkar.check_collission(*this,*p2) && condition.check_attack_condition(*p2,this->get_condition())) {
+		if (!flag && takkar.check_collission(*this,*p2) && condition.check_attack_condition(p2,this->get_condition())) {
 			p2->set_health(p2->get_health() - f->attack());
 			f->set_jumping(false);
 			flag = true;
@@ -77,7 +78,16 @@ public:
 	void set_health(float val) {
 		f->set_health(val);
 	}
-	bool is_sitting()const {
+	bool isSitting()const {
 		return f->isSitting();
+	}
+	sf::IntRect get_defaultbox()const {
+		return f->get_defaultbox();
+	}
+	bool isIdle()const {
+		if (!f->get_jump() && !get_sitting() && !get_leftMoving() && !get_rightMoving()) {
+			return true;
+		}
+		return false;
 	}
 };

@@ -35,7 +35,6 @@ public:
 		this->sit = sf::IntRect({ 392,24 }, { 25,50 });
 		this->sit_move = sf::IntRect({ 330, 24 }, { 25,50 });
 	}
-	Attack AI_select_attack(float enemy_x, float enemy_y) {}
 	int attack_idx() override{
 		int idx = -1;
 		if (sf::Keyboard::isKeyPressed(this->up) && sf::Keyboard::isKeyPressed(this->punch2)) {
