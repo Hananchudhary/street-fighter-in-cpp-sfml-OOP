@@ -37,7 +37,7 @@ public:
 	void set_attack(bool flag) {
 		f->set_attack(flag);
 	}
-	void move_character(bool& flag, sf::Clock& clk) {
+	virtual void move_character(Player* p2,bool& flag, sf::Clock& clk) {
 		f->move_character(flag, clk);
 	}
 	void set_box(sf::IntRect box) {

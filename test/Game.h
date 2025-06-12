@@ -23,7 +23,7 @@ class game {
     Player select_player() {}
     string get_bg() {}
     void select_difficulty() {}
-    void handle_processes(Player& ryu, Player& chun, sf::RenderWindow& window, sf::Clock& atk_clk) {
+    void handle_processes(Player* ryu, Player* chun, sf::RenderWindow& window, sf::Clock& atk_clk) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -34,75 +34,75 @@ class game {
                     window.close();
 
                 if (event.key.code == sf::Keyboard::W) {
-                    if (!ryu.get_jump()) {
-                        ryu.set_jumping(true);
-                        ryu.set_goingup(true);
+                    if (!ryu->get_jump()) {
+                        ryu->set_jumping(true);
+                        ryu->set_goingup(true);
                     }
                 }
-                if (event.key.code == sf::Keyboard::Up && !istwoplayer) {
-                    if (!chun.get_jump()) {
-                        chun.set_jumping(true);
-                        chun.set_goingup(true);
+                if (event.key.code == sf::Keyboard::Up && istwoplayer) {
+                    if (!chun->get_jump()) {
+                        chun->set_jumping(true);
+                        chun->set_goingup(true);
                     }
                 }
-                if (ryu.is_attacking() && !ryu.get_attack_status()) {
+                if (ryu->is_attacking() && !ryu->get_attack_status()) {
                     atk_clk.restart();
-                    ryu.set_attack(true);
-                    sf::IntRect temp = ryu.get_box();
+                    ryu->set_attack(true);
+                    sf::IntRect temp = ryu->get_box();
                     if (temp != sf::IntRect({ 1000,1000 }, { 1000,1000 })) {
-                        ryu.set_box(temp);
+                        ryu->set_box(temp);
                     }
                 }
-                if (chun.is_attacking() && !chun.get_attack_status() && !istwoplayer) {
+                if (chun->is_attacking() && !chun->get_attack_status() && istwoplayer) {
                     atk_clk.restart();
-                    chun.set_attack(true);
-                    sf::IntRect temp = chun.get_box();
+                    chun->set_attack(true);
+                    sf::IntRect temp = chun->get_box();
                     if (temp != sf::IntRect({ 1000,1000 }, { 1000,1000 })) {
-                        chun.set_box(temp);
+                        chun->set_box(temp);
                     }
                 }
             }
         }
     }
-    void handle_movements(Player& ryu, Player& chun, collission<Player, Player>& takkar) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && ryu.get_x() < 1190 && !takkar.check_collission(ryu, chun)) {
+    void handle_movements(Player* ryu, Player* chun, collission<Player, Player>& takkar) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && ryu->get_x() < 1190 && !takkar.check_collission(*ryu, *chun)) {
 
-            ryu.set_left_move(false);
-            ryu.set_right_move(true);
+            ryu->set_left_move(false);
+            ryu->set_right_move(true);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && chun.get_x() < 1070 && !istwoplayer) {
-            chun.set_left_move(false);
-            chun.set_right_move(true);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && chun->get_x() < 1070 && istwoplayer) {
+            chun->set_left_move(false);
+            chun->set_right_move(true);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && ryu.get_x() > 131) {
-            ryu.set_left_move(true);
-            ryu.set_right_move(false);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && ryu->get_x() > 131) {
+            ryu->set_left_move(true);
+            ryu->set_right_move(false);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && chun.get_x() > 20 && !istwoplayer && !takkar.check_collission(ryu, chun)) {
-            chun.set_left_move(true);
-            chun.set_right_move(false);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && chun->get_x() > 20 && istwoplayer && !takkar.check_collission(*ryu, *chun)) {
+            chun->set_left_move(true);
+            chun->set_right_move(false);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !ryu.get_jump()) {
-            ryu.set_sit(true);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !ryu->get_jump()) {
+            ryu->set_sit(true);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !chun.get_jump() && !istwoplayer) {
-            chun.set_sit(true);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !chun->get_jump() && istwoplayer) {
+            chun->set_sit(true);
         }
 
         if (!sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            ryu.set_sit(false);
+            ryu->set_sit(false);
         }
-        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !istwoplayer) {
-            chun.set_sit(false);
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && istwoplayer) {
+            chun->set_sit(false);
         }
     }
-    void update_frame(Player& ryu, Player& chun, bool& flag, sf::Clock& clk) {
-        if (!ryu.get_attack_status()) {
-            ryu.move_character(flag, clk);
+    void update_frame(Player* ryu, Player* chun, bool& flag, sf::Clock& clk) {
+        if (!ryu->get_attack_status()) {
+            ryu->move_character(chun,flag, clk);
         }
-        if (!chun.get_attack_status() || istwoplayer) {
-            chun.move_character(flag, clk);
+        if (!chun->get_attack_status()/* || !istwoplayer*/) {
+            chun->move_character(ryu,flag, clk);
         }
     }
     void match_start() {
@@ -117,11 +117,11 @@ class game {
         match.set("bg6.jpg", window, &ryu, &chun);
         while (window.isOpen()) {
 
-            handle_processes(ryu, chun, window, atk_clk);
-            handle_movements(ryu, chun, takkar);
-            match.attack(attack_flag, atk_clk);
+            handle_processes(&ryu, &chun, window, atk_clk);
+            handle_movements(&ryu, &chun, takkar);
+            match.attack(attack_flag, atk_clk,this->istwoplayer);
 
-            update_frame(ryu, chun, flag, clk);
+            update_frame(&ryu, &chun, flag, clk);
             
             window.clear();
             match.display(window);
@@ -134,7 +134,7 @@ class game {
         delete chun2;
     }
 public:
-    game() :window(sf::VideoMode(1200, 600), "Street Fighter 2"), istwoplayer{true} {}
+    game() :window(sf::VideoMode(1200, 600), "Street Fighter 2"), istwoplayer{false} {}
 	
 	void run() {
 

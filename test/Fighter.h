@@ -71,6 +71,87 @@ public:
 	bool get_sitting() {
 		return this->isSit;
 	}
+	void computer_movement(bool collission, bool& flag, sf::Clock& clk) {
+		sf::IntRect box1, box2;
+		box1 = start;
+		box2 = normal;
+		if (isJumping) {
+			if (goingUp) {
+				chrs.move(0.f, -jumpSpeed);
+				if (chrs.getPosition().y <= groundY - jumpHeight)
+					goingUp = false;
+			}
+			else {
+				chrs.move(0.f, jumpSpeed);
+				if (chrs.getPosition().y >= groundY) {
+					chrs.setPosition(chrs.getPosition().x, groundY);
+					isJumping = false;
+					goingUp = true;
+				}
+			}
+		}
+		if (isrightmove) {
+			if (this->get_x() < 1070) {
+				chrs.move(moveSpeed, 0.f);
+				if (chrs.getPosition().x >= groundX + moveLength) {
+					groundX = chrs.getPosition().x;
+					isrightmove = false;
+				}
+			}
+			else {
+				isrightmove = false;
+			}
+		}
+		if (isleftmove) {
+			if (this->get_x() > 20 && !collission) {
+				chrs.move(-moveSpeed, 0.f);
+				if (chrs.getPosition().x <= groundX - moveLength) {
+					groundX = chrs.getPosition().x;
+					isleftmove = false;
+				}
+			}
+			else {
+				isleftmove = false;
+			}
+		}
+		if (this->isSit && !this->isJumping) {
+			box1 = sit;
+			chrs.setPosition(chrs.getPosition().x, groundY);
+		}
+		if (isrightmove || isleftmove) {
+			if (isSit) {
+				box1 = sit;
+				box2 = sit_move;
+			}
+			else {
+				box1 = start;
+				box2 = move;
+			}
+		}
+		else {
+			if (isSit) {
+				box1 = sit;
+				box2 = sit;
+			}
+			else {
+				box1 = start;
+				box2 = normal;
+			}
+		}
+		if (!flag) {
+			chrs.setTextureRect(box1);
+		}
+		else {
+			chrs.setTextureRect(box2);
+		}
+		if (clk.getElapsedTime().asSeconds() > 0.35f) {
+			clk.restart();
+			if (flag)
+				flag = false;
+			else
+				flag = true;
+		}
+	}
 	void move_character(bool& flag, sf::Clock& clk) {
 		sf::IntRect box1, box2;
 		box1 = start;
@@ -90,7 +171,6 @@ public:
 			}
 		}
 		if (isrightmove) {
-
 			chrs.move(moveSpeed, 0.f);
 			if (chrs.getPosition().x >= groundX + moveLength) {
 				groundX = chrs.getPosition().x;
