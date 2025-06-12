@@ -154,6 +154,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Ring.h" />
     <ClInclude Include="ryu.h" />
+    <ClInclude Include="spriteloader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data.bin" />

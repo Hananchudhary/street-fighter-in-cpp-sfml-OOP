@@ -34,8 +34,8 @@ public:
 		chrs.setTextureRect(box);
 		chrs.setScale(_sx, _sy);
 		chrs.setPosition(_px, _py);
-		this->groundX = chrs.getPosition().x;
-		this->groundY = chrs.getPosition().y;
+		this->groundX = _px;
+		this->groundY = _py;
 	}
 	void set_left_move(bool flag) {
 		this->isleftmove = flag;

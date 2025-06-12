@@ -39,7 +39,7 @@ public:
 				}
 			}
 		}
-		this->select_movement();
+		this->select_movement(p2);
 		if (clk.getElapsedTime().asSeconds() > 0.2f) {
 			this->set_box(this->get_defaultbox());
 		}

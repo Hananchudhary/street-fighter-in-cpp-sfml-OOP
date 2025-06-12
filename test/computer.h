@@ -14,7 +14,7 @@ public:
 		f->computer_movement(fl, flag, clk);
 	}
 	virtual Attack select_attack() = 0;
-	void select_movement() {
+	void select_movement(Player* p2) {
 		srand(time(0));
 		int random = rand() % 2;
 		if (random == 0) {

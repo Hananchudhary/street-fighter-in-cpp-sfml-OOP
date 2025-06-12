@@ -49,6 +49,18 @@ public:
 	bool is_attacking()const {
 		return f->is_attacking();
 	}
+	sf::Keyboard::Key get_right_key()const {
+		return this->f->get_right_key();
+	}
+	sf::Keyboard::Key get_left_key()const {
+		return this->f->get_left_key();
+	}
+	sf::Keyboard::Key get_up_key()const {
+		return this->f->get_up_key();
+	}
+	sf::Keyboard::Key get_down_key()const {
+		return this->f->get_down_key();
+	}
 	int get_condition() const {
 		return f->get_attack_condition();
 	}

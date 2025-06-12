@@ -44,26 +44,6 @@ public:
 		health_bar.setOutlineThickness(2.f);
 	}
 	float get_health()const { return this->health; }
-	/*Attack select_attack() {
-		Dynamic_array<Attack> atks(this->powers);
-		int size = this->powers.size();
-		for (int i = 0; i < size; i++) {
-			for (int j = i + 1; j < size; j++) {
-				if (atks[j].get_damage() > atks[i].get_damage()) {
-					Attack temp = atks[i];
-					atks[i] = atks[j];
-					atks[j] = temp;
-				}
-			}
-		}
-		collission<Fighter, int> shart;
-		for (int i = 0; i < size; i++) {
-			if (shart.check_attack_condition(this, atks[i].get_condition())) {
-				return atks[i];
-			}
-		}
-		return Attack();
-	}*/
 	Dynamic_array<Attack> get_powers()const {
 		return this->powers;
 	}
@@ -235,6 +215,18 @@ public:
 	}
 	void set_health(float val) {
 		this->health = val;
+	}
+	sf::Keyboard::Key get_right_key()const {
+		return this->right;
+	}
+	sf::Keyboard::Key get_left_key()const {
+		return this->left;
+	}
+	sf::Keyboard::Key get_up_key()const {
+		return this->up;
+	}
+	sf::Keyboard::Key get_down_key()const {
+		return this->down;
 	}
 	void set_health_bar() {
 		health_bar.setSize(sf::Vector2f(450.f * (this->health / 100.f), 20.f));
