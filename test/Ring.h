@@ -21,18 +21,24 @@ public:
 		p1->display(window);
 		p2->display(window);
 	}
-	void attack(bool& flag, sf::Clock& clk, bool twoplayer) {
+	void attack(bool& flag, sf::Clock& clk, bool& flag2, sf::Clock& clk2, bool twoplayer) {
 		if ((p2->get_attack_status() || !twoplayer) && (p2->get_y()) > (p2->get_GroundY() - 20.f) && !p1->get_leftMoving()) {
 			p2->set_place(p2->get_x(), p2->get_GroundY());
-			p2->attack(p1, flag, clk);
+			p2->attack(p1, flag2, clk2);
 			if (twoplayer) {
 				p2->set_jumping(false);
 			}
+		}
+		else if (clk2.getElapsedTime().asSeconds() > 0.2f) {
+			p2->set_attack(false);
 		}
 		if (p1->get_attack_status() && p1->get_y() > (p1->get_GroundY() - 20.f) && !p2->get_rightMoving() ) {
 			p1->set_place(p1->get_x(), p1->get_GroundY());
 			p1->attack(p2, flag, clk);
 			p1->set_jumping(false);
+		}
+		else if (clk.getElapsedTime().asSeconds() > 0.2f) {
+			p1->set_attack(false);
 		}
 	}
 	bool is_match_end() {

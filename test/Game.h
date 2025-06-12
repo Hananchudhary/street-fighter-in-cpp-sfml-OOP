@@ -9,6 +9,10 @@
 #include"Ring.h"
 #include"collission.h"
 #include"computer.h"
+#include"Hardmode.h"
+#include"Mediummode.h"
+#include"Easymode.h"
+#include<fstream>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 using namespace std;
@@ -17,13 +21,11 @@ class game {
     sf::RenderWindow window;
     bool istwoplayer;
     bool play_again() {}
-    void select_mode() {
-
-    }
+    void select_mode() {}
     Player select_player() {}
     string get_bg() {}
     void select_difficulty() {}
-    void handle_processes(Player* ryu, Player* chun, sf::RenderWindow& window, sf::Clock& atk_clk) {
+    void handle_processes(Player* ryu, Player* chun, sf::RenderWindow& window, sf::Clock& atk_clk, sf::Clock& atk_clk2) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -54,7 +56,7 @@ class game {
                     }
                 }
                 if (chun->is_attacking() && !chun->get_attack_status() && istwoplayer) {
-                    atk_clk.restart();
+                    atk_clk2.restart();
                     chun->set_attack(true);
                     sf::IntRect temp = chun->get_box();
                     if (temp != sf::IntRect({ 1000,1000 }, { 1000,1000 })) {
@@ -105,21 +107,66 @@ class game {
             chun->move_character(ryu,flag, clk);
         }
     }
+    void store_data(Player* ryu, Player* chun) {
+        ofstream fout("data.bin", ios::binary);
+        try {
+            if (!fout) {
+                throw ("file cannot open to write");
+            }
+        }
+        catch (const char* err) {
+            cout << err << endl;
+        }
+        float val1 = ryu->get_x(), val2 = chun->get_x();
+        int val3 = 0;
+        if (istwoplayer)
+            val3 = 1;
+        else
+            val3 = 0;
+
+        fout.write((char*)&val1, sizeof(val1));
+        fout.write((char*)&val2, sizeof(val2));
+        fout.write((char*)&val3, sizeof(val3));
+        fout.close();
+    }
+    void load_data(Player* ryu, Player* chun) {
+        ifstream fin("data.bin", ios::binary);
+        try {
+            if (!fin) {
+                throw ("file cannot open to write");
+            }
+        }
+        catch (const char* err) {
+            cout << err << endl;
+        }
+        float val1, val2;
+        int val3;
+        fin.read((char*)&val1, sizeof(val1));
+        fin.read((char*)&val2, sizeof(val2));
+        fin.read((char*)&val3, sizeof(val3));
+        fin.close();
+        ryu->set_place(val1, ryu->get_GroundY());
+        chun->set_place(val2, chun->get_GroundY());
+        if (val3 == 0)
+            istwoplayer = false;
+        else
+            istwoplayer = true;
+    }
     void match_start() {
-        sf::Clock clk, atk_clk;
+        sf::Clock clk, atk_clk, atk_clk2;
         collission<Player, Player> takkar;
         bool flag = false;
-        bool attack_flag = false;
+        bool attack_flag = false, attack_flag2 = false;
         Ryu* ryu1 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, -6.f, 6.f, 483.f, 260.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
         chun_li* chun2 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, 4.5f, 4.5f, 733.f, 320.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
         Player ryu(ryu1);
-        computer chun(chun2);
+        Easymode chun(chun2);
         match.set("bg6.jpg", window, &ryu, &chun);
+        this->load_data(&ryu, &chun);
         while (window.isOpen()) {
-
-            handle_processes(&ryu, &chun, window, atk_clk);
+            handle_processes(&ryu, &chun, window, atk_clk, atk_clk2);
             handle_movements(&ryu, &chun, takkar);
-            match.attack(attack_flag, atk_clk,this->istwoplayer);
+            match.attack(attack_flag, atk_clk, attack_flag2, atk_clk2,this->istwoplayer);
 
             update_frame(&ryu, &chun, flag, clk);
             
@@ -130,6 +177,7 @@ class game {
                 break;
             }
         }
+        this->store_data(&ryu, &chun);
         delete ryu1;
         delete chun2;
     }
@@ -137,7 +185,6 @@ public:
     game() :window(sf::VideoMode(1200, 600), "Street Fighter 2"), istwoplayer{false} {}
 	
 	void run() {
-
         this->match_start();
 	}
 };

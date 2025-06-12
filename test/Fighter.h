@@ -44,7 +44,7 @@ public:
 		health_bar.setOutlineThickness(2.f);
 	}
 	float get_health()const { return this->health; }
-	Attack select_attack() {
+	/*Attack select_attack() {
 		Dynamic_array<Attack> atks(this->powers);
 		int size = this->powers.size();
 		for (int i = 0; i < size; i++) {
@@ -63,6 +63,9 @@ public:
 			}
 		}
 		return Attack();
+	}*/
+	Dynamic_array<Attack> get_powers()const {
+		return this->powers;
 	}
 	void set_attack(bool flag) {
 		this->is_attack = flag;

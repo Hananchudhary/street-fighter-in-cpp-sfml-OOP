@@ -65,5 +65,19 @@
     <ClInclude Include="computer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Hardmode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mediummode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Easymode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
