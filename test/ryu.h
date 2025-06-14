@@ -5,8 +5,9 @@
 #include"Player.h"
 using namespace std;
 class Ryu : public Fighter {
+	String name;
 public:
-	Ryu(sf::IntRect box, string name, float _jh, float _ml, float _js, float _ms, float _sx, float _sy, float _px, float _py, float _hx, float _hsx, sf::Keyboard::Key _u, sf::Keyboard::Key _d, sf::Keyboard::Key _l, sf::Keyboard::Key _r, sf::Keyboard::Key lp, sf::Keyboard::Key mp, sf::Keyboard::Key lk, sf::Keyboard::Key mk) :Fighter(box, name, _jh, _ml, _js, _ms, _sx, _sy, _px, _py, _hx, _hsx, _u, _d, _l, _r, lp, mp, lk, mk) {
+	Ryu(sf::IntRect box, string name, float _jh, float _ml, float _js, float _ms, float _sx, float _sy, float _px, float _py, float _hx, float _hsx, sf::Keyboard::Key _u, sf::Keyboard::Key _d, sf::Keyboard::Key _l, sf::Keyboard::Key _r, sf::Keyboard::Key lp, sf::Keyboard::Key mp, sf::Keyboard::Key lk, sf::Keyboard::Key mk) :Fighter(box, name, _jh, _ml, _js, _ms, _sx, _sy, _px, _py, _hx, _hsx, _u, _d, _l, _r, lp, mp, lk, mk) , name{"ryu"} {
 		Dynamic_array<sf::Keyboard::Key> _a;
 		_a.push(lp); // 3,3
 		Attack temp(_a, 5, sf::IntRect({ 53,100 }, { 25,50 }), 2);
@@ -64,6 +65,9 @@ public:
 			return -1;
 		}
 	}
+	String get_name()const override{
+		return this->name;
+	}
 	float attack() override {
 		int idx = attack_idx();
 		if (idx != -1) {
@@ -85,4 +89,5 @@ public:
 		}
 		return 0;
 	}
+	~Ryu() = default;
 };

@@ -2,9 +2,10 @@
 #include"Player.h"
 using namespace std;
 class computer : public Player {
-	
+protected:
+	String name;
 public:
-	computer(Fighter* _f):Player(_f){
+	computer(Fighter* _f) :Player(_f) {
 		this->set_attack(false);
 		this->set_goingup(true);
 	}
@@ -39,4 +40,5 @@ public:
 		}
 	}
 	virtual void attack(Player* p2, bool& flag, sf::Clock& clk) = 0;
+	virtual ~computer() = default;
 };

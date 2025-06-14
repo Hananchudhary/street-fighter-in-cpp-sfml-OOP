@@ -3,7 +3,10 @@
 using namespace std;
 class Easymode :public computer {
 public:
-	Easymode(Fighter* _f) :computer(_f) {}
+	String get_name()const {
+		return this->name;
+	}
+	Easymode(Fighter* _f) :computer(_f) { this->name = "easy"; }
 	Attack select_attack() {
 		Dynamic_array<Attack> res = this->f->get_powers();
 		srand(time(0));
@@ -49,4 +52,5 @@ public:
 			flag = false;
 		}
 	}
+	~Easymode() = default;
 };

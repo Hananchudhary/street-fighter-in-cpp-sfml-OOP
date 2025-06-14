@@ -75,4 +75,5 @@ public:
 	bool get_rightMoving()const {
 		return this->isrightmove;
 	}
+	~character() = default;
 };

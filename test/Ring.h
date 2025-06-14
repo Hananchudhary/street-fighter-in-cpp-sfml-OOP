@@ -41,10 +41,14 @@ public:
 			p1->set_attack(false);
 		}
 	}
-	bool is_match_end() {
-		if (this->p1->get_health() <= 0.f || this->p2->get_health() <= 0.f) {
-			return true;
+	int is_match_end() {
+		if (this->p1->get_health() <= 0.f) {
+			return 2;
 		}
-		return false;
+		else if (this->p2->get_health() <= 0.f) {
+			return 1;
+		}
+		return 0;
 	}
+	~Ring() = default;
 };

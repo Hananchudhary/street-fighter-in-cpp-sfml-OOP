@@ -22,4 +22,5 @@ public:
 	int get_condition()const {
 		return this->condition;
 	}
+	~Attack() = default;
 };

@@ -29,20 +29,31 @@ class game {
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed)
+                if (event.type == sf::Event::Closed) {
                     window.close();
+                    return;
+                }
                 if (event.type == sf::Event::KeyPressed) {
-                    if (event.key.code == sf::Keyboard::Escape)
+                    if (event.key.code == sf::Keyboard::Escape) {
                         window.close();
+                        return;
+                    }
                 }
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 sf::Vector2i pos = sf::Mouse::getPosition(window);
                 if (pos.x > 400 && pos.x < 802 && pos.y>345 && pos.y < 380) {
+                    this->delay(1.f);
                     this->select_mode();
+                    break;
                 }
                 else if (pos.x > 412 && pos.x < 788 && pos.y>404 && pos.y < 434) {
-
+                    this->delay(1.f);
+                    Player* p1 = nullptr;
+                    Player *p2 = nullptr;
+                    this->load_data(p1, p2);
+                    this->match_start(p1,p2);
+                    break;
                 }
             }
             window.clear();
@@ -50,12 +61,41 @@ class game {
             window.display();
         }
     }
-    bool play_again() {}
-    void select_mode() {
+    void show_victory(int cntrl) {
+        sf::Clock clk;
         sf::Sprite bgs;
         sf::Texture bgt;
         spriteloader utility;
-        utility.load(bgs, bgt, "modes.png", this->window);
+        if (cntrl == 1) {
+            utility.load(bgs, bgt, "p1-win.png", this->window);
+        }
+        else {
+            utility.load(bgs, bgt, "p2-win.png", this->window);
+        }
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape)
+                        window.close();
+                }
+            }
+            if (clk.getElapsedTime().asSeconds() > 2.f) {
+                break;
+            }
+            window.clear();
+            window.draw(bgs);
+            window.display();
+        }
+        this->play_again();
+    }
+    void play_again() {
+        sf::Sprite bgs;
+        sf::Texture bgt;
+        spriteloader utility;
+        utility.load(bgs, bgt, "play-again.png", this->window);
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
@@ -68,40 +108,236 @@ class game {
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 sf::Vector2i pos = sf::Mouse::getPosition(window);
-                if (pos.x > 118 && pos.x < 985 && pos.y > 218 && pos.y < 277) {
-
+                if (pos.x > 231 && pos.x < 967 && pos.y > 285 && pos.y < 334) {
+                    this->delay(1.f);
+                    this->select_mode();
+                    break;
                 }
-                else if (pos.x > 136 && pos.x < 984 && pos.y > 320 && pos.y < 370) {
-
+                else if (pos.x > 462 && pos.x < 755 && pos.y > 386 && pos.y < 436) {
+                    return;
                 }
-                cout << pos.x << "  " << pos.y << endl;
             }
             window.clear();
             window.draw(bgs);
             window.display();
         }
     }
-    /*Player select_player(bool flag) {
+    void select_mode() {
+        sf::Sprite bgs;
+        sf::Texture bgt;
+        Player* p1 = nullptr;
+        Player* p2 = nullptr;
+        spriteloader utility;
+        utility.load(bgs, bgt, "modes.png", this->window);
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                    return;
+                }
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape) {
+                        window.close();
+                        return;
+                    }
+                }
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                sf::Vector2i pos = sf::Mouse::getPosition(window);
+                if (pos.x > 118 && pos.x < 985 && pos.y > 218 && pos.y < 277) {
+                    this->istwoplayer = false;
+                    this->delay(1.f);
+                    this->select_difficulty();
+                    break;
+                }
+                else if (pos.x > 136 && pos.x < 984 && pos.y > 320 && pos.y < 370) {
+                    this->istwoplayer = true;
+                    this->delay(1.f);
+                    p1 = this->select_player(true);
+                    if (p1 != nullptr) {
+                        this->delay(1.f);
+                        p2 = this->select_player(false);
+                        if (p2 != nullptr) {
+                            this->delay(1.f);
+                            this->match_start(p1, p2);
+                        }
+                    }
+                    break;
+                }
+            }
+            window.clear();
+            window.draw(bgs);
+            window.display();
+        }
+    }
+    Player* select_player(bool flag) {
         Ryu* ryu1 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, -6.f, 6.f, 483.f, 260.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
         chun_li* chun1 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, 4.5f, 4.5f, 733.f, 320.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
-
-        Ryu* ryu2 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, 6.f, 6.f, 700.f, 260.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
-        chun_li* chun2 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, -4.5f, 4.5f, 485.f, 320.f, 700.f, 1.f, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G );
+        Ryu* ryu2 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, 6.f, 6.f, 700.f, 260.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
+        chun_li* chun2 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, -4.5f, 4.5f, 485.f, 320.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
+        Player* res = nullptr;
+        sf::Sprite bgs;
+        sf::Texture bgt;
+        spriteloader utility;
+        utility.load(bgs, bgt, "players.jpg", this->window);
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                    return nullptr;
+                }
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape) {
+                        window.close();
+                        return nullptr;
+                    }
+                }
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                sf::Vector2i pos = sf::Mouse::getPosition(window);
+                if (pos.x > 522 && pos.x < 625 && pos.y > 275 && pos.y < 322) {
+                    if (flag) {
+                        res = new Player(ryu1);
+                    }
+                    else {
+                        res = new Player(ryu2);
+                    }
+                    return res;
+                }
+                else if (pos.x > 522 && pos.x < 630 && pos.y > 340 && pos.y < 390) {
+                    if (flag) {
+                        res = new Player(chun2);
+                    }
+                    else {
+                        res = new Player(chun1);
+                    }
+                    return res;
+                }
+            }
+            window.clear();
+            window.draw(bgs);
+            window.display();
+        }
+        
+        return nullptr;
     }
-    Player* select_enemy() {
+    void delay(float time) {
+        sf::Clock clock;
+        sf::Vector2f center(window.getSize().x / 2.f, window.getSize().y / 2.f);
+        const float PI = 3.14159265f;
+        const float radius = 100.f;
+        const float drawTimeSeconds = time; // Total time to complete the circle
+        const int maxSegments = 360;
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape)
+                        window.close();
+                }
+            }
 
-    }*/
+            float elapsed = clock.getElapsedTime().asSeconds();
+            float percent = std::min(elapsed / drawTimeSeconds, 1.f);
+            int segmentsToDraw = static_cast<int>(percent * maxSegments);
+            if (elapsed >= time) {
+                return;
+            }
+            sf::VertexArray circle(sf::TriangleFan, segmentsToDraw + 2);
+            circle[0].position = center;
+            circle[0].color = sf::Color::Green;
+
+            for (int i = 0; i <= segmentsToDraw; ++i) {
+                float angle = i * 2 * PI / maxSegments;
+                float x = center.x + radius * std::cos(angle);
+                float y = center.y + radius * std::sin(angle);
+                circle[i + 1].position = sf::Vector2f(x, y);
+                circle[i + 1].color = sf::Color::Yellow;
+                
+            }
+            if (elapsed >= time) {
+                return;
+            }
+            window.clear(sf::Color::Black);
+            window.draw(circle);
+            window.display();
+        }
+    }
+    Fighter* computer_select_fighter() {
+        srand(time(0));
+        int idx = rand() % 2;
+        Ryu* ryu2 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, 6.f, 6.f, 700.f, 260.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
+        chun_li* chun1 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, 4.5f, 4.5f, 733.f, 320.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
+        Fighter* res = nullptr;
+        if (idx == 0) {
+            res = (ryu2);
+        }
+        else {
+            res = (chun1);
+        }
+        return res;
+    }
     string get_bg() {}
-    void select_difficulty() {}
-    void handle_processes(Player* ryu, Player* chun, sf::RenderWindow& window, sf::Clock& atk_clk, sf::Clock& atk_clk2) {
+    void select_difficulty() {
+        Player* p1 = select_player(true);
+        this->delay(1.f);
+        sf::Sprite bgs;
+        sf::Texture bgt;
+        spriteloader utility;
+        utility.load(bgs, bgt, "difficulty.png", this->window);
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape)
+                        window.close();
+                }
+            }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                sf::Vector2i pos = sf::Mouse::getPosition(window);
+                if (pos.x > 201 && pos.x < 840 && pos.y > 206 && pos.y < 266) {
+                    Easymode* p2 = new Easymode(this->computer_select_fighter());
+                    this->delay(1.f);
+                    this->match_start(p1, p2);
+                    break;
+                }
+                else if (pos.x > 200 && pos.x < 990 && pos.y > 295 && pos.y < 345) {
+                    Mediummode* p2 = new Mediummode(this->computer_select_fighter());
+                    this->delay(1.f);
+                    this->match_start(p1, p2);
+                    break;
+                }
+                else if (pos.x > 215 && pos.x < 870 && pos.y > 370 && pos.y < 415) {
+                    Hardmode* p2 = new Hardmode(this->computer_select_fighter());
+                    this->delay(1.f);
+                    this->match_start(p1, p2);
+                    break;
+                }
+            }
+            window.clear();
+            window.draw(bgs);
+            window.display();
+        }
+    }
+    bool handle_processes(Player* ryu, Player* chun, sf::RenderWindow& window, sf::Clock& atk_clk, sf::Clock& atk_clk2) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+                return false;
+            }
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Escape)
+                if (event.key.code == sf::Keyboard::Escape) {
                     window.close();
+                    return false;
+                }
 
                 if (event.key.code == ryu->get_up_key()) {
                     if (!ryu->get_jump()) {
@@ -133,65 +369,60 @@ class game {
                 }
             }
         }
+        return true;
     }
     void handle_movements(Player* p1,Player* p2, collission<Player, Player>& takkar) {
-        bool flag = false;
-        if (takkar.check_collission(*p1, *p2)) {
-            if (p2->get_x() > p1->get_x()) {
-                flag = true;
-            }
-        }
-        if (flag) {
-            if (sf::Keyboard::isKeyPressed(p2->get_right_key()) && p2->get_x() < 1070 && istwoplayer) {
+        
+        if (sf::Keyboard::isKeyPressed(p2->get_right_key()) && p2->get_x() < 1070 && istwoplayer) {
                 p2->set_left_move(false);
                 p2->set_right_move(true);
             }
-            if (sf::Keyboard::isKeyPressed(p1->get_right_key()) && p1->get_x() < 1190 && !takkar.check_collission(*p1, *p2)) {
+        if (sf::Keyboard::isKeyPressed(p1->get_right_key()) && p1->get_x() < 1190 && !takkar.check_collission(*p1, *p2)) {
+                p1->set_left_move(false);
+                p1->set_right_move(true);
+            }
+        
+
+        if (sf::Keyboard::isKeyPressed(p1->get_left_key()) && p1->get_x() > 131) {
+                p1->set_left_move(true);
+                p1->set_right_move(false);
+            }
+        if (sf::Keyboard::isKeyPressed(p2->get_left_key()) && p2->get_x() > 131 && !takkar.check_collission(*p1, *p2) && istwoplayer) {
+                p2->set_left_move(true);
+                p2->set_right_move(false);
+            }
+
+        if (sf::Keyboard::isKeyPressed(p2->get_right_key()) && p2->get_x() < 1070/* && !takkar.check_collission(*p1, *p2)*/ && istwoplayer) {
+                p2->set_left_move(false);
+                p2->set_right_move(true);
+            }
+        if (sf::Keyboard::isKeyPressed(p1->get_right_key()) && p1->get_x() < 1070 && !takkar.check_collission(*p1, *p2)) {
                 p1->set_left_move(false);
                 p1->set_right_move(true);
             }
 
-            if (sf::Keyboard::isKeyPressed(p1->get_left_key()) && p1->get_x() > 131) {
+        if (sf::Keyboard::isKeyPressed(p1->get_left_key()) && p1->get_x() > 20/* && !takkar.check_collission(*p1, *p2)*/) {
                 p1->set_left_move(true);
                 p1->set_right_move(false);
             }
-            if (sf::Keyboard::isKeyPressed(p2->get_left_key()) && p2->get_x() > 131 && !takkar.check_collission(*p1, *p2) && istwoplayer) {
+        if (sf::Keyboard::isKeyPressed(p2->get_left_key()) && p2->get_x() > 20 && istwoplayer && !takkar.check_collission(*p1, *p2)) {
                 p2->set_left_move(true);
                 p2->set_right_move(false);
-            }
-        }
-        else {
-            if (sf::Keyboard::isKeyPressed(p2->get_right_key()) && p2->get_x() < 1070 && !takkar.check_collission(*p1, *p2) && istwoplayer) {
-                p2->set_left_move(false);
-                p2->set_right_move(true);
-            }
-            if (sf::Keyboard::isKeyPressed(p1->get_right_key()) && p1->get_x() < 1070) {
-                p1->set_left_move(false);
-                p1->set_right_move(true);
             }
 
-            if (sf::Keyboard::isKeyPressed(p1->get_left_key()) && p1->get_x() > 131 && !takkar.check_collission(*p1, *p2)) {
-                p1->set_left_move(true);
-                p1->set_right_move(false);
-            }
-            if (sf::Keyboard::isKeyPressed(p2->get_left_key()) && p2->get_x() > 131 && istwoplayer) {
-                p2->set_left_move(true);
-                p2->set_right_move(false);
-            }
-        }
         if (sf::Keyboard::isKeyPressed(p2->get_down_key()) && !p2->get_jump()) {
-            p2->set_sit(true);
-        }
+                p2->set_sit(true);
+            }
         if (sf::Keyboard::isKeyPressed(p1->get_down_key()) && !p1->get_jump()) {
-            p1->set_sit(true);
-        }
+                p1->set_sit(true);
+            }
 
         if (!sf::Keyboard::isKeyPressed(p1->get_down_key())) {
-            p1->set_sit(false);
-        }
+                p1->set_sit(false);
+            }
         if (!sf::Keyboard::isKeyPressed(p2->get_down_key())) {
-            p2->set_sit(false);
-        }
+                p2->set_sit(false);
+            }
     }
     void update_frame(Player* ryu, Player* chun, bool& flag, sf::Clock& clk) {
         if (!ryu->get_attack_status()) {
@@ -201,7 +432,7 @@ class game {
             chun->move_character(ryu,flag, clk);
         }
     }
-    void store_data(Player* ryu, Player* chun) {
+    void store_data(bool flag,Player* ryu, Player* chun) {
         ofstream fout("data.bin", ios::binary);
         try {
             if (!fout) {
@@ -211,19 +442,45 @@ class game {
         catch (const char* err) {
             cout << err << endl;
         }
-        float val1 = ryu->get_x(), val2 = chun->get_x();
-        int val3 = 0;
-        if (istwoplayer)
-            val3 = 1;
-        else
-            val3 = 0;
+        float val1 = ryu->get_x(), val2 = chun->get_x(), health1 = ryu->get_health(), health2 = chun->get_health();
+        int players = 0, fighter1 = 1, fighter2 = 1, data = 0, mode = 0;
+        if (ryu->get_fighter_name() == "chun")
+            fighter1 = 0;
+        if (chun->get_fighter_name() == "chun")
+            fighter2 = 0;
+        if (istwoplayer) 
+            players = 1;
+        if (!istwoplayer) {
+            if (chun->get_name() == "medium")
+                mode = 1;
+            if (chun->get_name() == "hard")
+                mode = 2;
+        }
+        
+        if (flag)
+            data = 1;
+        
 
+        fout.write((char*)&data, sizeof(data));
+        fout.write((char*)&players, sizeof(players));
+        fout.write((char*)&fighter1, sizeof(fighter1));
         fout.write((char*)&val1, sizeof(val1));
+        fout.write((char*)&health1, sizeof(health1));
+        if (!istwoplayer) {
+            fout.write((char*)&mode, sizeof(mode));
+        }
+
+        fout.write((char*)&fighter2, sizeof(fighter2));
         fout.write((char*)&val2, sizeof(val2));
-        fout.write((char*)&val3, sizeof(val3));
+        fout.write((char*)&health2, sizeof(health2));
+
         fout.close();
     }
-    void load_data(Player* ryu, Player* chun) {
+    void load_data(Player*& ryu, Player*& chun) {
+        Ryu* ryu1 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, -6.f, 6.f, 483.f, 260.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
+        chun_li* chun1 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, 4.5f, 4.5f, 733.f, 320.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
+        Ryu* ryu2 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, 6.f, 6.f, 700.f, 260.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
+        chun_li* chun2 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, -4.5f, 4.5f, 485.f, 320.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
         ifstream fin("data.bin", ios::binary);
         try {
             if (!fin) {
@@ -233,57 +490,115 @@ class game {
         catch (const char* err) {
             cout << err << endl;
         }
-        float val1, val2;
-        int val3;
+        float val1 = 0, val2 = 0, health1 = 0, health2 = 0;
+        int players = 0, fighter1 = 1, fighter2 = 1, data = 0, mode = 0;
+        fin.read((char*)&data, sizeof(data));
+        if (data == 0) {
+            this->select_mode();
+            return;
+        }
+        fin.read((char*)&players, sizeof(players));
+        fin.read((char*)&fighter1, sizeof(fighter1));
         fin.read((char*)&val1, sizeof(val1));
-        fin.read((char*)&val2, sizeof(val2));
-        fin.read((char*)&val3, sizeof(val3));
-        fin.close();
-        ryu->set_place(val1, ryu->get_GroundY());
-        chun->set_place(val2, chun->get_GroundY());
-        if (val3 == 0)
-            istwoplayer = false;
+        fin.read((char*)&health1, sizeof(health1));
+        if (fighter1 == 0)
+            ryu = new Player(chun2);
         else
-            istwoplayer = true;
+            ryu = new Player(ryu1);
+        ryu->set_place(val1, ryu->get_GroundY());
+        if (players != 1) {
+            this->istwoplayer = false;
+            fin.read((char*)&mode, sizeof(mode));
+        }
+        else {
+            this->istwoplayer = true;
+        }
+        fin.read((char*)&fighter2, sizeof(fighter2));
+        fin.read((char*)&val2, sizeof(val2));
+        fin.read((char*)&health2, sizeof(health2));
+        if (players != 1) {
+            if (fighter2 == 1) {
+                if (mode == 1) {
+                    Mediummode* p2 = new Mediummode(ryu2);
+                    chun = p2;
+                }
+                else if (mode == 2) {
+                    Hardmode* p2 = new Hardmode(ryu2);
+                    chun = p2;
+                }
+                else {
+                    Easymode* p2 = new Easymode( ryu2);
+                    chun = p2;
+                }
+            }
+            else {
+                if (mode == 1) {
+                    Mediummode* p2 = new Mediummode(chun1);
+                    chun = p2;
+                }
+                else if (mode == 2) {
+                    Hardmode* p2 = new Hardmode(chun1);
+                    chun = p2;
+                }
+                else {
+                    Easymode* p2 = new Easymode(chun1);
+                    chun = p2;
+                }
+            }
+        }
+        else {
+            if (fighter2 == 0) {
+                chun = new Player(chun1);
+            }
+            else {
+                chun = new Player(ryu2);
+            }
+        }
+        chun->set_place(val2, chun->get_GroundY());
+        chun->set_health(health2);
+        ryu->set_health(health1);
+        fin.close();
     }
-    void match_start() {
+    void match_start(Player* p1,Player* p2) {
         sf::Clock clk, atk_clk, atk_clk2;
         collission<Player, Player> takkar;
         bool flag = false;
+        int cntrl = 0;
         bool attack_flag = false, attack_flag2 = false;
-        Ryu* ryu1 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, -6.f, 6.f, 483.f, 260.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
-        chun_li* chun2 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, 4.5f, 4.5f, 733.f, 320.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
-        
-        //Ryu* ryu1 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, 6.f, 6.f, 700.f, 260.f, 30.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
-        //chun_li* chun2 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, -4.5f, 4.5f, 485.f, 320.f, 700.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
-        Player ryu(ryu1);
-        //Easymode* chun = new Easymode(chun2);
-        Player* chun = new Player(chun2);
-        match.set("bg6.jpg", window, &ryu, chun);
-        //this->load_data(&ryu, &chun);
+        match.set("bg6.jpg", window, p1, p2);
         while (window.isOpen()) {
-            handle_processes(&ryu, chun, window, atk_clk, atk_clk2);
-            handle_movements(&ryu, chun, takkar);
+            if (handle_processes(p1, p2, window, atk_clk, atk_clk2)) {}
+            else
+                break;
+
+            handle_movements(p1, p2, takkar);
             match.attack(attack_flag, atk_clk, attack_flag2, atk_clk2,this->istwoplayer);
 
-            update_frame(&ryu, chun, flag, clk);
+            update_frame(p1, p2, flag, clk);
             
             window.clear();
             match.display(window);
             window.display();
-            if (match.is_match_end()) {
+            cntrl = match.is_match_end();
+            if (cntrl == 1 || cntrl == 2) {
                 break;
             }
         }
-        this->store_data(&ryu, chun);
-        delete ryu1;
-        delete chun2;
+        if (cntrl != 0) {
+            this->show_victory(cntrl);
+            this->store_data(false, p1, p2);
+        }
+        else {
+            this->store_data(true, p1, p2);
+        }
+        delete p1;
+        delete p2;
     }
 public:
     game() :window(sf::VideoMode(1200, 600), "Street Fighter 2"), istwoplayer{true} {}
 	
 	void run() {
-        //this->main_menu();
-        this->match_start();
+        this->main_menu();
 	}
+    ~game() = default;
 };

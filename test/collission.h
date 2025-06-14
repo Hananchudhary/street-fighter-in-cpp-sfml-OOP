@@ -3,7 +3,7 @@ template <typename T1, typename T2>
 class collission {
 public:
 	bool check_collission(T1 p1,T2 p2) const {
-        if (p1.get_x() < p2.get_x()) {
+        /*if (p1.get_x() < p2.get_x()) {
             if (p1.get_x() + 20.f > p2.get_x()) {
                 return true;
             }
@@ -12,7 +12,12 @@ public:
             if (p2.get_x() + 20.f > p1.get_x()) {
                 return true;
             }
-        }
+        }*/
+        float res = p1.get_x() - p2.get_x();
+        if (res < 0)
+            res = res * -1;
+        if (res < 20.f)
+            return true;
         return false;
 	}
     bool check_attack_condition(T1* player1, T2 condition) {
@@ -41,5 +46,5 @@ public:
         }
         return true;
     }
-
+    ~collission() = default;
 };

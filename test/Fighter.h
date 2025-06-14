@@ -219,6 +219,7 @@ public:
 	sf::Keyboard::Key get_right_key()const {
 		return this->right;
 	}
+	virtual String get_name()const = 0;
 	sf::Keyboard::Key get_left_key()const {
 		return this->left;
 	}

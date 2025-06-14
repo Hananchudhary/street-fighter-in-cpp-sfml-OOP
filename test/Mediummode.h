@@ -3,7 +3,10 @@
 using namespace std;
 class Mediummode :public computer {
 public:
-	Mediummode(Fighter* _f) :computer(_f) {}
+	String get_name()const {
+		return this->name;
+	}
+	Mediummode(Fighter* _f) :computer(_f) { this->name = "medium"; }
 	Attack select_attack() {
 		Dynamic_array<Attack> res = this->f->get_powers();
 		srand(time(0));
@@ -51,4 +54,5 @@ public:
 			flag = false;
 		}
 	}
+	~Mediummode() = default;
 };

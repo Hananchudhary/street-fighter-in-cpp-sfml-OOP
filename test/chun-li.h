@@ -2,8 +2,9 @@
 #include"Fighter.h"
 #include"Attack.h"
 class chun_li : public Fighter {
+	String name;
 public:
-	chun_li(sf::IntRect box, string name, float _jh, float _ml, float _js, float _ms, float _sx, float _sy, float _px, float _py, float _hx, float _hsx, sf::Keyboard::Key _u, sf::Keyboard::Key _d, sf::Keyboard::Key _l, sf::Keyboard::Key _r, sf::Keyboard::Key lp, sf::Keyboard::Key mp,  sf::Keyboard::Key lk, sf::Keyboard::Key mk) :Fighter(box, name, _jh, _ml, _js, _ms, _sx, _sy, _px, _py, _hx, _hsx, _u, _d, _l, _r, lp, mp, lk, mk) {
+	chun_li(sf::IntRect box, string name, float _jh, float _ml, float _js, float _ms, float _sx, float _sy, float _px, float _py, float _hx, float _hsx, sf::Keyboard::Key _u, sf::Keyboard::Key _d, sf::Keyboard::Key _l, sf::Keyboard::Key _r, sf::Keyboard::Key lp, sf::Keyboard::Key mp, sf::Keyboard::Key lk, sf::Keyboard::Key mk) :Fighter(box, name, _jh, _ml, _js, _ms, _sx, _sy, _px, _py, _hx, _hsx, _u, _d, _l, _r, lp, mp, lk, mk), name{"chun"} {
 		Dynamic_array<sf::Keyboard::Key> _a;
 		_a.push(lp);
 		Attack temp(_a, 7.f, sf::IntRect({ 62,84 }, { 40,50 }), 0); // 2,2
@@ -34,6 +35,9 @@ public:
 		this->start = sf::IntRect({ 10,24 }, { 25,50 });
 		this->sit = sf::IntRect({ 392,24 }, { 25,50 });
 		this->sit_move = sf::IntRect({ 330, 24 }, { 25,50 });
+	}
+	String get_name()const override{
+		return this->name;
 	}
 	int attack_idx() override{
 		int idx = -1;
@@ -84,4 +88,5 @@ public:
 		}
 		return 0;
 	}
+	~chun_li() = default;
 };

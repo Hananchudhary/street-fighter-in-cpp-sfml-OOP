@@ -3,7 +3,10 @@
 using namespace std;
 class Hardmode :public computer {
 public:
-	Hardmode(Fighter* _f):computer(_f){}
+	String get_name()const {
+		return this->name;
+	}
+	Hardmode(Fighter* _f) :computer(_f) { this->name = "hard"; }
 	Attack select_attack() {
 		Dynamic_array<Attack> atks = this->f->get_powers();
 		int size = atks.size();
@@ -57,4 +60,5 @@ public:
 			flag = false;
 		}
 	}
+	~Hardmode() = default;
 };

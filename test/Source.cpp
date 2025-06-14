@@ -9,5 +9,3 @@ int main() {
     street_fighter.run();
     return 0;
 }
-// left player: 131, 1190
-// right player: 20, 1070

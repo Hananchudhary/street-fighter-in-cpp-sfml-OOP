@@ -15,8 +15,9 @@ public:
             cout << err;
         }
         bgs.setTexture(bgt);
-        float xdir = window.getSize().x / bgs.getGlobalBounds().width;
-        float ydir = window.getSize().y / bgs.getGlobalBounds().height;
-        bgs.setScale(sf::Vector2f(xdir, ydir));
+        float xdir = static_cast<float>(window.getSize().x) / bgt.getSize().x;
+        float ydir = static_cast<float>(window.getSize().y) / bgt.getSize().y;
+        bgs.setScale(xdir, ydir);
 	}
+    ~spriteloader() = default;
 };

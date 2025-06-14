@@ -10,4 +10,5 @@ public:
     background(const string& filename, sf::RenderWindow& window);
     void set(const string& filename, sf::RenderWindow& window);
     void display(sf::RenderWindow& window);
+    ~background() = default;
 };

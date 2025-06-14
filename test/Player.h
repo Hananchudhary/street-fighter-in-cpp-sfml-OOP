@@ -29,6 +29,8 @@ public:
 	float get_x() const {
 		return f->get_x();
 	}
+	virtual String get_name()const { return String(); }
+	String get_fighter_name()const { return this->f->get_name(); }
 	float get_y() const {
 		return f->get_y();
 	}
@@ -102,4 +104,5 @@ public:
 		}
 		return false;
 	}
+	virtual ~Player() = default;
 };
