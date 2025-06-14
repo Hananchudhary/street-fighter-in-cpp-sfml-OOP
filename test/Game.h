@@ -51,8 +51,7 @@ class game {
                     this->delay(1.f);
                     Player* p1 = nullptr;
                     Player *p2 = nullptr;
-                    this->load_data(p1, p2);
-                    this->match_start(p1,p2);
+                    this->match_start(this->load_data(p1, p2),p1,p2);
                     break;
                 }
             }
@@ -160,7 +159,7 @@ class game {
                         p2 = this->select_player(false);
                         if (p2 != nullptr) {
                             this->delay(1.f);
-                            this->match_start(p1, p2);
+                            this->match_start(this->get_bg(), p1, p2);
                         }
                     }
                     break;
@@ -281,7 +280,40 @@ class game {
         }
         return res;
     }
-    string get_bg() {}
+    string set_bg(int idx) {
+        try {
+            if (idx == 0) {
+                return string("bg1.jpg");
+            }
+            else if (idx == 1) {
+                return string("bg2.jpg");
+            }
+            else if (idx == 2) {
+                return string("bg3.jpg");
+            }
+            else if (idx == 3) {
+                return string("bg4.jpg");
+            }
+            else if (idx == 4) {
+                return string("bg5.jpg");
+            }
+            else if (idx == 5) {
+                return string("bg6.jpg");
+            }
+            else {
+                throw ("Wrong bg");
+            }
+        }
+        catch (const char* err) {
+            cout << err << endl;
+        }
+        return string("bg6.jpg");
+    }
+    string get_bg() {
+        srand(time(0));
+        int random = rand() % 6;
+        return set_bg(random);
+    }
     void select_difficulty() {
         Player* p1 = select_player(true);
         this->delay(1.f);
@@ -304,19 +336,19 @@ class game {
                 if (pos.x > 201 && pos.x < 840 && pos.y > 206 && pos.y < 266) {
                     Easymode* p2 = new Easymode(this->computer_select_fighter());
                     this->delay(1.f);
-                    this->match_start(p1, p2);
+                    this->match_start(this->get_bg(), p1, p2);
                     break;
                 }
                 else if (pos.x > 200 && pos.x < 990 && pos.y > 295 && pos.y < 345) {
                     Mediummode* p2 = new Mediummode(this->computer_select_fighter());
                     this->delay(1.f);
-                    this->match_start(p1, p2);
+                    this->match_start(this->get_bg(), p1, p2);
                     break;
                 }
                 else if (pos.x > 215 && pos.x < 870 && pos.y > 370 && pos.y < 415) {
                     Hardmode* p2 = new Hardmode(this->computer_select_fighter());
                     this->delay(1.f);
-                    this->match_start(p1, p2);
+                    this->match_start(this->get_bg(), p1, p2);
                     break;
                 }
             }
@@ -443,7 +475,7 @@ class game {
             cout << err << endl;
         }
         float val1 = ryu->get_x(), val2 = chun->get_x(), health1 = ryu->get_health(), health2 = chun->get_health();
-        int players = 0, fighter1 = 1, fighter2 = 1, data = 0, mode = 0;
+        int players = 0, fighter1 = 1, fighter2 = 1, data = 0, mode = 0, bg = this->match.get_bg();
         if (ryu->get_fighter_name() == "chun")
             fighter1 = 0;
         if (chun->get_fighter_name() == "chun")
@@ -460,8 +492,8 @@ class game {
         if (flag)
             data = 1;
         
-
         fout.write((char*)&data, sizeof(data));
+        fout.write((char*)&bg, sizeof(bg));
         fout.write((char*)&players, sizeof(players));
         fout.write((char*)&fighter1, sizeof(fighter1));
         fout.write((char*)&val1, sizeof(val1));
@@ -476,7 +508,7 @@ class game {
 
         fout.close();
     }
-    void load_data(Player*& ryu, Player*& chun) {
+    string load_data(Player*& ryu, Player*& chun) {
         Ryu* ryu1 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, -6.f, 6.f, 483.f, 260.f, 30.f, 1.f, sf::Keyboard::W, sf::Keyboard::S, sf::Keyboard::A, sf::Keyboard::D, sf::Keyboard::R, sf::Keyboard::T, sf::Keyboard::F, sf::Keyboard::G);
         chun_li* chun1 = new chun_li(sf::IntRect({ 10,24 }, { 25,50 }), "chun-li.png", 210.f, 13.f, 0.2f, 0.09f, 4.5f, 4.5f, 733.f, 320.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
         Ryu* ryu2 = new Ryu(sf::IntRect({ 0,0 }, { 25,50 }), "ryu.png", 210.f, 13.f, 0.2f, 0.09f, 6.f, 6.f, 700.f, 260.f, 700.f, 1.f, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::I, sf::Keyboard::O, sf::Keyboard::K, sf::Keyboard::L);
@@ -491,12 +523,14 @@ class game {
             cout << err << endl;
         }
         float val1 = 0, val2 = 0, health1 = 0, health2 = 0;
-        int players = 0, fighter1 = 1, fighter2 = 1, data = 0, mode = 0;
+        int players = 0, fighter1 = 1, fighter2 = 1, data = 0,bg = 5, mode = 0;
         fin.read((char*)&data, sizeof(data));
         if (data == 0) {
             this->select_mode();
-            return;
+            return this->get_bg();
         }
+        fin.read((char*)&bg, sizeof(bg));
+        string back = set_bg(bg);
         fin.read((char*)&players, sizeof(players));
         fin.read((char*)&fighter1, sizeof(fighter1));
         fin.read((char*)&val1, sizeof(val1));
@@ -558,14 +592,15 @@ class game {
         chun->set_health(health2);
         ryu->set_health(health1);
         fin.close();
+        return back;
     }
-    void match_start(Player* p1,Player* p2) {
+    void match_start(string filename,Player* p1,Player* p2) {
         sf::Clock clk, atk_clk, atk_clk2;
         collission<Player, Player> takkar;
         bool flag = false;
         int cntrl = 0;
         bool attack_flag = false, attack_flag2 = false;
-        match.set("bg6.jpg", window, p1, p2);
+        match.set(filename, window, p1, p2);
         while (window.isOpen()) {
             if (handle_processes(p1, p2, window, atk_clk, atk_clk2)) {}
             else

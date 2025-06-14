@@ -50,5 +50,8 @@ public:
 		}
 		return 0;
 	}
+	int get_bg() {
+		return this->bg.get_id();
+	}
 	~Ring() = default;
 };
