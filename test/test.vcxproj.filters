@@ -77,6 +77,12 @@
     <ClInclude Include="spriteloader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="joe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="guile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data.bin">

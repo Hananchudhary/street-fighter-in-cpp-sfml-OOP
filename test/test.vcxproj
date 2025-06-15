@@ -147,7 +147,9 @@
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="Easymode.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="guile.h" />
     <ClInclude Include="Hardmode.h" />
+    <ClInclude Include="joe.h" />
     <ClInclude Include="Mediummode.h" />
     <ClInclude Include="mystr.h" />
     <ClInclude Include="Fighter.h" />
