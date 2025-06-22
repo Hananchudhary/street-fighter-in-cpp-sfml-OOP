@@ -67,3 +67,7 @@ Challenges and Solutions :
 •	match_start() function became difficult to maintain. So, I broke it down into smaller functions like handle_processes(), update_frame() and handle_movement().
 
 •	It was difficult to find logical errors in SFML programs because they cannot be debug line by line. I used to print things at many places and functions.
+
+Video demo :
+
+https://drive.google.com/file/d/19nGuq4PfqTyaucDzAP_zviqS3WgNwH4Q/view?usp=sharing
